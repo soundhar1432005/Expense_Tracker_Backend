@@ -13,9 +13,9 @@ exports.getUser=async(req,res)=>{
 
 
 exports.postUser=async(req,res)=>{
-    const {title,amount}=req.body;
+    const {type,title,amount}=req.body;
     try {
-        const newUser=new userModel({title,amount})
+        const newUser=new userModel({type,title,amount})
         await newUser.save()
         res.status(201).json(newUser)
 
@@ -37,12 +37,12 @@ exports.deleteUser=async(req,res)=>{
 
 
 exports.updateUser=async(req,res)=>{
-    const {title,amount}=req.body;
+    const {type,title,amount}=req.body;
     const id=req.params.id;
 
 
     try {
-        const updatedUser=await userModel.findByIdAndUpdate(id,{title,amount},{new:true});
+        const updatedUser=await userModel.findByIdAndUpdate(id,{type,title,amount},{new:true});
         if(!updatedUser){
             return res.status(404).json({message:"Person not found"})
         }

@@ -1,21 +1,30 @@
-const express=require("express")
-const connectDB=require("./config/db")
-const useRoute=require("./routes/userRoutes")
+const express = require("express");
+const connectDB = require("./config/db");
+const authRoutes = require("./routes/authRoutes");
+const transactionRoutes = require("./routes/transactionRoutes");
+const cors = require("cors");
 require("dotenv").config();
-const cors=require('cors');
-const app=express()
+
+const app = express();
 connectDB();
-app.use(cors());
+
+// CORS configuration for production
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
-app.use("/api",useRoute);
-app.get('/',(req,res)=>{
-    res.send('Hello from Express!');
+app.use("/api/auth", authRoutes);
+app.use("/api/transactions", transactionRoutes);
+
+app.get("/", (req, res) => {
+  res.send("Expense Tracker API");
 });
-app.get('/text',(req,res)=>{
-    res.send('Hello text from Express!');
-});
-PORT=process.env.PORT
-app.listen(PORT,()=>{
-    console.log(`server connected to http://localhost:${PORT}`);
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
